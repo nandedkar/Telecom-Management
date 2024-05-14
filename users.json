@@ -12,19 +12,5 @@
     "planCost": "199",
     "validity": "180",
     "renewDate": "2024-05-14T04:40:38.408Z"
-  },
-  {
-    "name": "Manoj Ucchekar",
-    "dob": "15/05/2024",
-    "email": "ucchekarmanoj3@gmail.com",
-    "adharNumber": "4564131",
-    "registrationDate": "14/05/2024",
-    "mobileNumber": "9879876545",
-    "status": "Inactive",
-    "id": "eca6e61a-b640-4f12-baa4-c2353288850f",
-    "renewDate": "2024-05-14T04:45:04.353Z",
-    "planName": "Gold180",
-    "planCost": "299",
-    "validity": "180"
   }
 ]
