@@ -67,7 +67,6 @@ const UpgradeDowngrade = () => {
       // Add logic for success message or redirect
     } catch (error) {
       console.error("Error:", error);
-      debugger
       setResponse(error.response.data);
       // Add logic for error message
     }
@@ -99,6 +98,7 @@ const UpgradeDowngrade = () => {
               label="Plan Name"
               onChange={handleChange}
               autoWidth={true}
+              required
             >
               <MenuItem value={"Platinum365"}>Platinum 365</MenuItem>
               <MenuItem value={"Gold180"}>Gold 180</MenuItem>
@@ -113,6 +113,7 @@ const UpgradeDowngrade = () => {
               defaultValue={user.planCost}
               label="Plan Cost"
               onChange={handleChange}
+              required
             >
               <MenuItem value={"499"}>499</MenuItem>
               <MenuItem value={"299"}>299</MenuItem>
@@ -127,6 +128,7 @@ const UpgradeDowngrade = () => {
               defaultValue={user.validity}
               label="Validity"
               onChange={handleChange}
+              required
             >
               <MenuItem value={"365"}>365</MenuItem>
               <MenuItem value={"180"}>180</MenuItem>
@@ -141,6 +143,7 @@ const UpgradeDowngrade = () => {
               defaultValue={user.status}
               label="Plan Status"
               onChange={handleChange}
+              required
             >
               <MenuItem value={"Active"}>Active</MenuItem>
               <MenuItem value={"Inactive"}>Inactive</MenuItem>

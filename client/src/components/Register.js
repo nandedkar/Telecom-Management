@@ -22,17 +22,93 @@ const Register = () => {
     status: "",
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    dob: "",
+    email: "",
+    adharNumber: "",
+    registrationDate: "",
+    mobileNumber: "",
+    status: "",
+  });
+
   const [response, setResponse] = useState();
 
   const handleChange = (e, field) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [field || e.target.name]: field ? e : e.target.value,
+      [name]: field ? e : value,
     });
+
+    // Clear validation errors when the user starts typing again
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [e.target.name]: "",
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let isValid = true;
+
+    // Name validation
+    if (formData.name.trim() === "") {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        name: "Name is required",
+      }));
+      isValid = false;
+    }
+
+    // Email validation
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: "Invalid email format",
+      }));
+      isValid = false;
+    }
+
+    // Mobile number validation
+    if (!/^\d{10}$/.test(formData.mobileNumber)) {
+      debugger
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        mobileNumber: "Mobile number must be 10 digits",
+      }));
+      isValid = false;
+    }
+
+    // Adhar number validation
+    if (!/^\d{12}$/.test(formData.adharNumber)) {
+      debugger
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        adharNumber: "Adhar number must be 12 digits",
+      }));
+      isValid = false;
+    }
+
+    const isValidDOB = validateDOB(formData.dob);
+    if (!isValidDOB) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        dob: "Date of Birth must be a past date",
+      }));
+      return;
+    }
+    
+    const isValidRegDate = validateRegDate(formData.registrationDate);
+    if (!isValidRegDate) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        registrationDate: "Registration date  must be a future date",
+      }));
+      return;
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:5000/api/customers/register",
@@ -51,6 +127,18 @@ const Register = () => {
       });
       // Add logic for error message
     }
+  };
+
+  const validateDOB = (dob) => {
+    const enteredDate = new Date(dob);
+    const currentDate = new Date();
+    return enteredDate < currentDate;
+  };
+
+  const validateRegDate = (regDate) => {
+    const enteredDate = new Date(regDate);
+    const currentDate = new Date();
+    return enteredDate > currentDate;
   };
 
   return (
@@ -77,19 +165,25 @@ const Register = () => {
             defaultValue=""
             type="text"
             onChange={handleChange}
+            error={!!errors.name}
+            helperText={errors.name}
           />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                label="DOB"
-                name="dob"
-                // defaultValue={formData.dob}
-                onChange={(newValue) =>
-                  handleChange(dayjs(newValue).format("DD/MM/YYYY"), "dob")
-                }
-              />
-            </DemoContainer>
-          </LocalizationProvider>
+          <TextField
+            required
+            id="dob"
+            label="Date of Birth"
+            name="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            variant="outlined"
+            fullWidth
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            error={!!errors.dob}
+            helperText={errors.dob}
+          />
           <TextField
             required
             id="outlined-required"
@@ -98,6 +192,8 @@ const Register = () => {
             name="email"
             type="email"
             onChange={handleChange}
+            error={!!errors.email}
+            helperText={errors.email}
           />
 
           <TextField
@@ -108,21 +204,26 @@ const Register = () => {
             type="number"
             name="adharNumber"
             onChange={handleChange}
+            error={!!errors.adharNumber}
+            helperText={errors.adharNumber}
           />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                label="Registration Date"
-                name="registrationDate"
-                onChange={(newValue) =>
-                  handleChange(
-                    dayjs(newValue).format("DD/MM/YYYY"),
-                    "registrationDate"
-                  )
-                }
-              />
-            </DemoContainer>
-          </LocalizationProvider>
+          <TextField
+            required
+            id="registrationDate"
+            label="Registration Date"
+            name="registrationDate"
+            value={formData.registrationDate}
+            onChange={handleChange}
+            variant="outlined"
+            fullWidth
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            error={!!errors.registrationDate}
+            helperText={errors.registrationDate}
+          />
+
           <TextField
             required
             id="outlined-required"
@@ -131,6 +232,8 @@ const Register = () => {
             type="number"
             name="mobileNumber"
             onChange={handleChange}
+            error={!!errors.mobileNumber}
+            helperText={errors.mobileNumber}
           />
           <Button variant="contained" type="submit">
             Register

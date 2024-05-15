@@ -17,14 +17,21 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
 } from "@mui/material";
 const RenewPlan = () => {
   const { userId } = useParams();
   const [formData, setFormData] = useState({
     id: userId,
     renewDate: dayjs(new Date()),
-    status: "Active",
+    status: "",
   });
+
+  const [errors, setErrors] = useState({
+    renewDate: "",
+    status: "",
+  });
+
   const [userData, setUserData] = useState([]);
   const [response, setResponse] = useState("");
 
@@ -66,6 +73,26 @@ const RenewPlan = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let isValid = true;
+
+    const isValidRenewDate = validateRenewDate(formData.renewDate);
+    if (!isValidRenewDate) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        renewDate: "Renewal date  must be a future date",
+      }));
+      return;
+    }
+
+    if (formData.status === "") {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        name: "Status need to cahnge",
+      }));
+      isValid = false;
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:5000/api/customers/renewPlan",
@@ -74,7 +101,7 @@ const RenewPlan = () => {
       console.log(response.data);
 
       setResponse(response.data.message);
-      window.location.href = '/displayCustomers';
+      window.location.href = "/displayCustomers";
       // history.push("/redirect");
       // Add logic for success message or redirect
     } catch (error) {
@@ -83,6 +110,11 @@ const RenewPlan = () => {
     }
   };
 
+  const validateRenewDate = (rDate) => {
+    const enteredDate = new Date(rDate);
+    const currentDate = new Date();
+    return enteredDate > currentDate;
+  };
   return (
     <Box
       sx={{
@@ -119,17 +151,34 @@ const RenewPlan = () => {
           </>
         )}
         <FormControl sx={{ m: 1, minWidth: 250 }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
               <DatePicker
-                label="Controlled picker"
+                label="Renewal Affective Date"
                 name="renewDate"
                 defaultValue={formData.renewDate}
                 onChange={(newValue) => handleDate("renewDate", newValue)}
                 required
               />
             </DemoContainer>
-          </LocalizationProvider>
+          </LocalizationProvider> */}
+
+          <TextField
+            required
+            id="renewDate"
+            label="Renewal Affective Date"
+            name="renewDate"
+            value={formData.renewDate}
+            onChange={handleChange}
+            variant="outlined"
+            fullWidth
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            error={!!errors.renewDate}
+            helperText={errors.renewDate}
+          />
         </FormControl>
 
         <FormControl sx={{ m: 1, minWidth: 250 }}>
@@ -140,6 +189,8 @@ const RenewPlan = () => {
             label="Plan Status"
             onChange={handleChange}
             required
+            error={!!errors.status}
+            helperText={errors.status}
           >
             <MenuItem value={"Active"}>Active</MenuItem>
             <MenuItem value={"Inactive"}>Inactive</MenuItem>

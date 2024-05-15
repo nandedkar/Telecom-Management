@@ -21,20 +21,18 @@ const App = () => {
           <Route path="/displayCustomers" element={<DisplayCustomer />} />
           <Route path="/plan" element={<ChoosePlan />} />
           <Route path="/renewPlan/:userId" element={<RenewPlan />} />
-          <Route path="/upgradeDowngrade/:userId" element={<UpgradeDowngrade />} />
+          <Route
+            path="/upgradeDowngrade/:userId"
+            element={<UpgradeDowngrade />}
+          />
           <Route path="/upgradeDowngrade" element={<UpgradeDowngrade />} />
           <Route path="/renewPlan" element={<RenewPlan />} />
-          {/* 
-            <Route path="upgradeDowngradePlan" element={<UpgradeDowngradePlan />} />
-            <Route path="*" element={<NoMatch />} /> */}
-          {/* </Route> */}
+          {/* <Route path="*" element={<NoMatch />} /> */}
         </Routes>
       </BrowserRouter>
     </div>
   );
 };
-
-export default App;
 
 function Home() {
   return (
@@ -57,22 +55,4 @@ function Home() {
     </Grid>
   );
 }
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
-
-function NoMatch() {
-  return (
-    <div>
-      <h2>Nothing to see here!</h2>
-      <p>
-        <Link to="/">Go to the home page</Link>
-      </p>
-    </div>
-  );
-}
+export default App;

@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -87,7 +86,6 @@ export default function DisplayCustomer() {
                       </Button>
                     </TableCell>
                     <TableCell align="right">
-                      {/* {row.status === "Inactive" && ( */}
                         <Button
                           href={`/renewPlan/${row.id}`}
                           variant="outlined"
@@ -95,7 +93,6 @@ export default function DisplayCustomer() {
                         >
                           Renew
                         </Button>
-                      {/* )} */}
                     </TableCell>
 
                     <TableCell align="right">
